@@ -1,5 +1,10 @@
 import discord
 import responses
+import json
+
+tokens = open('config.json')
+json_contents = json.load(tokens)
+api_key = json_contents['botToken']
 
 async def send_message(message, user_message, is_private):
     try:
@@ -10,7 +15,6 @@ async def send_message(message, user_message, is_private):
         print(e)
 
 def run_discord_bot():
-    TOKEN = 'MTE2MDM1NTg4NTk5OTIwNjQyMA.GnEIJw.quQCeZhXotC8ScNBbvWpyLwAOcby1y7gIqcBTg'
     intents = discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents = intents)
@@ -38,4 +42,4 @@ def run_discord_bot():
         else:
             await send_message(message, user_message, is_private = False)
     
-    client.run(TOKEN)
+    client.run(api_key)
