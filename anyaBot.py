@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 import responses
 import json
 
@@ -18,6 +19,11 @@ def run_discord_bot():
     intents = discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents = intents)
+    
+    @client.command(aliases=['close','stop'])
+    async def shutdown(ctx):
+        await ctx.send("Shutting down bot")
+        await client.close()
 
     @client.event
     async def on_ready():
