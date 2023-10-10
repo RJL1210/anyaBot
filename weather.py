@@ -11,16 +11,28 @@ def temp_conversion(kelvin):
     fahrenheit = celsius * (9/5) + 32
     return fahrenheit
 
-city = "burlingame"
+
+#print(response)
+
+
 
 def get_weather(city) -> str:
     weather_url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}'
     response = requests.get(weather_url).json()
+
+    if response['cod'] == '404':
+        return "No City Found"
+    
     temp_kelvin = response['main']['temp']
     temp_fahren = "{:.2f}".format(temp_conversion(temp_kelvin))
-    #time = dt.datetime.utcfromtimestamp(response['dt'] + response['timezone'])
-    print(response)
-    return temp_fahren
-    #print(time)
 
+    return 'Degrees: ' + temp_fahren
 
+def get_time(city) -> str:
+    weather_url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}'
+    response = requests.get(weather_url).json()
+
+    if response['cod'] == '404':
+        return "No City Found"
+    
+    return "Time: " + str(dt.datetime.utcfromtimestamp(response['dt'] + response['timezone']))

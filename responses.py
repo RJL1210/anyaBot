@@ -1,29 +1,25 @@
 import random
 import weather
 
-def handle_response(message, private) -> str:
+def handle_response(message) -> str:
     p_message = message.lower()
 
-    if private == True:
-        if p_message == 'hello':
-            return "Waku Waku"
+    if p_message == '!hello':
+        return "Waku Waku"
     
-        elif p_message == 'roll':
-            return str(random.randint(1,6))
+    elif p_message == '!roll':
+        return str(random.randint(1,6))
     
-        elif p_message == "help":
-            return "`This is a help message that you can modify`"
-    else: 
-        if p_message == '!hello':
-            return "Waku Waku"
-    
-        elif p_message == '!roll':
-            return str(random.randint(1,6))
-    
-        elif p_message == "!help":
-            return "`!hello \n !help \n !roll`"
+    elif p_message == "!help":
+        return "`!hello \n !help \n !roll`"
         
-        elif "!weather" in p_message:
-            split = p_message.split(' ', 1)
-            city = split[1]
-            return weather.get_weather(city)
+    elif "!weather" in p_message:
+        split = p_message.split(' ', 1)
+        city = split[1]
+        return weather.get_weather(city)
+        
+    elif "!time" in p_message:
+        split = p_message.split(' ', 1)
+        city = split[1]
+        date_and_time = weather.get_time(city).split(' ')
+        return date_and_time[1]

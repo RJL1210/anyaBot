@@ -3,27 +3,27 @@ from discord.ext import commands
 import responses
 import json
 
+#get api
 tokens = open('config.json')
 json_contents = json.load(tokens)
 api_key = json_contents['botToken']
 
-async def send_message(message, user_message, is_private):
-    try:
-        response = responses.handle_response(user_message, is_private)
-        await message.author.send(response) if is_private else await message.channel.send(response)
 
+
+async def send_message(message, user_message):
+    try:
+        response = responses.handle_response(user_message)
+        await message.channel.send(response)
+
+    #need to add more exceptions and ways to handle, probably should make the bot say something like "invalid input or something"
     except Exception as e:
         print(e)
 
 def run_discord_bot():
     intents = discord.Intents.default()
     intents.message_content = True
-    client = discord.Client(intents = intents)
-    
-    @client.command(aliases=['close','stop'])
-    async def shutdown(ctx):
-        await ctx.send("Shutting down bot")
-        await client.close()
+    client = commands.Bot(command_prefix='.', intents = discord.Intents.all())
+
 
     @client.event
     async def on_ready():
@@ -32,6 +32,7 @@ def run_discord_bot():
 
     @client.event
     async def on_message(message):
+
         #detects own message
         if message.author == client.user:
             return
@@ -39,13 +40,17 @@ def run_discord_bot():
         username = str(message.author)
         user_message = str(message.content)
         channel = str(message.channel)
+        
+        '''does not work idk why want to implement a shutdown
+        
+        if user_message is ".shutdown":
+            async def shutdown(ctx):
+                await ctx.send("Shutting down")
+                await client.close()
+        '''
 
         print(f'{username} said: "{user_message}" ({channel})')
-
-        if user_message[0] == '?':
-            user_message = user_message[1:]
-            await send_message(message, user_message, is_private = True)
-        else:
-            await send_message(message, user_message, is_private = False)
+        
+        await send_message(message, user_message)
     
     client.run(api_key)
